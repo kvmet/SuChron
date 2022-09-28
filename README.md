@@ -75,6 +75,7 @@ A chron generator or class may have the following events:
 - Chron Generator Open (cgo/cco) - Open/active (Is relevant)
 - Chron Generator Modified (cgm/ccm) - Modified (It is up to monitoring functions to figure out what the nature of the modification was)
 - Chron Generator Closed (cgc/ccc) - Is complete, canceled or otherwise no longer relevant
+- Chron Listener (kinda like chron gen? but not triggered based on time?) - TODO
 
 ### Referencing Chrons:  
 `suchr:cgm:<ID>*2` would refer to every second instance of a chron generator being modified that has ID "ID"
@@ -96,4 +97,7 @@ This operator works much like the plus "+" operator but when referring to other 
 TODO:
 - Allow text month descriptions (JAN, FEB, March)
 - Allow text day-of-week descriptions (MON, T, W, Thursday)
-- Is the @ operator even useful? 
+- technically @ creates a hidden Chron Gen that fires the chron to the right! does that mean that the command can be on the far left?! `suchr:<cmd>@chron@chron`
+- get rid of * operator. just use # for chron references and then + or @. then 2h, 25m, 0, etc.
+- use ~ to force a specific time resolution for execution.
+- flag if new recurrences should despawn old or leave them
