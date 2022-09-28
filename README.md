@@ -9,19 +9,22 @@ The first portion of a SuChron uri indicates how it should be interpreted with t
 A full version of the string should also be supported:  
 `suchron:...`
 
-## Time-base: Describes a reliable time reference and algorithm. SuChron includes the following:
+## Frequency: Describes a reliable time reference and algorithm. SuChron includes the following:
 
 `suchr:tai:...` - Atomic* time format.  
 `suchr:gps:...` - GPS* time format.  
 `suchr:utc<+/-><#>:...` - Constant UTC Offset in # hours.  
 `suchr:_:...` - "Inherit" i.e. let the system decide.  
-`suchr:z<timezone>:...` - Timezone abbreviation. Implementation specific.  
+`suchr:tz<timezone>:...` - Timezone abbreviation. Implementation specific.  
+
+All of these times are assumed to be zero at the unix epoch unless their standard has a separate definition.
 
 * GPS and Atomic time units have their own standards that should be followed in SuChron implementation.
 
 ## Unit:
 
 The third section includes the unit that should be referred to for this descriptor.  
+- 0 : ZERO (No time. Multiplication ignored.)
 - fs : femptoseconds (1E-15 seconds)  
 - ps : picoseconds (1E-12 seconds)  
 - ns : nanoseconds (1E-9 seconds)  
@@ -39,9 +42,17 @@ The third section includes the unit that should be referred to for this descript
 
 `suchr:tai:ms...` would describe one millisecond in atomic time.  
 
-These times can be expanded by multiplying with the `*` operator. `suchr:tai:ms*2348`, for example, would describe 2348 milliseconds.
+These times can be expanded by multiplying with the `*` operator. `suchr:tai:ms*2348`, for example, would describe an event that occurs every 2348 milliseconds.
 
 It is even possible to combine units with the `+` operator! `suchr:_:yr*2022+mo*9+d*27` would be 27 days + 9 months + 2022 years.
+
+## Quantity
+
+A SuChron definition followed by `#` and then an integer describes the number of times that the event should occur:
+
+`suchr:gps:ms*230+yr+h*23#2` describes an event that is based on gps time and occurs every 1 year, 23 hours, and 230 milliseconds. Once it has executed twice it will automatically close.
+
+If `#` is not included then a chron is assumed to be infinite. It must have #1 in order to only occur once.
 
 ## Referring to other chrons:  
 SuChron instances can be based on other SuChron instances! SuChron assumes 3 primary objects:  
@@ -66,9 +77,11 @@ A chron generator or class may have the following events:
 - Chron Generator Closed (cgc/ccc) - Is complete, canceled or otherwise no longer relevant
 
 ### Referencing Chrons:  
-`suchr:cgm:<ID>*2` would refer to every second instance of a chron generator being modified that has ID <ID>
+`suchr:cgm:<ID>*2` would refer to every second instance of a chron generator being modified that has ID "ID"
   
-`suchr:ccs:<ID>*3+ms*30` would refer to 30ms after every 3rd chron instance of class <ID> spawns
+`suchr:ccs:<ID>*3+ms*30` would refer to 30ms after every 3rd chron instance of class ID spawns
+
+`suchr:tai:ms*99#2@ccc:<ID>#22` is a chron that executes twice (separated by 99ms) every time that a chron class "ID" event closes until 22 chron class "ID" events have closed
   
 # Shifting the base time reference:
   
