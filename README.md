@@ -17,7 +17,7 @@ A full version of the string should also be supported:
 `suchr:_:...` - "Inherit" i.e. let the system decide.  
 `suchr:z<timezone>:...` - Timezone abbreviation. Implementation specific.  
 
-* GPS and Atomic time units may NOT line up with a standard calendar depending on how they are implemented. It is recommended to use the base units for these formats unless you are certain that you know how it is implemented.
+* GPS and Atomic time units have their own standards that should be followed in SuChron implementation.
 
 ## Unit:
 
